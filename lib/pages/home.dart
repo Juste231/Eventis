@@ -33,7 +33,6 @@ class _HomeState extends State<Home> {
                 style: TextStyle(
                     color: Color(0xFF112A46),
                     fontSize: 20,
-                    decoration: TextDecoration.underline
                 ),
               ),
             ),
@@ -54,7 +53,6 @@ class _HomeState extends State<Home> {
                 style: TextStyle(
                     color: Color(0xFF112A46),
                     fontSize: 20,
-                    decoration: TextDecoration.underline
                 ),
               ),
             ),
