@@ -3,6 +3,7 @@ import 'package:eventiss/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:eventiss/pages/bottomnav.dart';
+import 'package:eventiss/pages/auth/register.dart';
 
 
 class splashScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _splashScreenState extends State<splashScreen>
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     Future.delayed(Duration(seconds: 2), (){
       Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => bottomnav())
+      MaterialPageRoute(builder: (_) => SignUpScreen())
       );
     } );
     }
@@ -31,6 +32,7 @@ class _splashScreenState extends State<splashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xFF112A46),
       body: Container(
         child: Column(

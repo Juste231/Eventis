@@ -154,27 +154,35 @@ class _cardforeventState extends State<cardforevent> {
     {
       'image': 'images/ça.jpeg',
       'title': 'Data',
-      'subtitle': 'Weloveeya'
+      'subtitle': 'Weloveeya',
+      'category': 'Technologie',
+      'date': '30 Décembre 2024'
     },
     {
       'image': 'images/mark1.jpg',
       'title': 'Data',
-      'subtitle': 'Weloveeya'
+      'subtitle': 'Weloveeya',
+      'category': 'Innovation',
+      'date': '31 Décembre 2024'
     },
     {
       'image': 'images/mark2.jpeg',
       'title': 'Data',
-      'subtitle': 'Weloveeya'
+      'subtitle': 'Weloveeya',
+      'category': 'Design',
+      'date': '1 Janvier 2025'
     },
     {
       'image': 'images/Hoy.jpeg',
       'title': 'Data',
-      'subtitle': 'Weloveeya'
+      'subtitle': 'Weloveeya',
+      'category': 'Marketing',
+      'date': '2 Janvier 2025'
     },
   ];
 
   Widget _buildEventCard(Map<String, String> event) {
-    return GestureDetector( // Ajout du GestureDetector
+    return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
@@ -187,23 +195,45 @@ class _cardforeventState extends State<cardforevent> {
         width: 200,
         height: 200,
         decoration: BoxDecoration(
-          color: Colors.red,
           borderRadius: BorderRadius.circular(12),
         ),
         clipBehavior: Clip.antiAlias,
         child: Stack(
           children: [
+            // Image de fond
             Positioned.fill(
               child: Image.asset(
                 event['image']!,
                 fit: BoxFit.cover,
               ),
             ),
+            // Catégorie en haut à gauche
+            Positioned(
+              top: 12,
+              left: 12,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  event['category']!,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            // Overlay gradient et informations en bas
             Positioned(
               bottom: 0,
               left: 0,
+              right: 0,
               child: Container(
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
@@ -216,14 +246,23 @@ class _cardforeventState extends State<cardforevent> {
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                        event['title']!,
-                        style: TextStyle(color: Colors.white, fontSize: 16)
+                      event['title']!,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
+                    SizedBox(height: 4),
                     Text(
-                        event['subtitle']!,
-                        style: TextStyle(color: Colors.white, fontSize: 14)
+                      event['date']!,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.8),
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),
@@ -244,7 +283,7 @@ class _cardforeventState extends State<cardforevent> {
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: eventData.length,
-          separatorBuilder: (context, index) => SizedBox(width: 20),
+          separatorBuilder: (context, index) => SizedBox(width: 16),
           itemBuilder: (context, index) {
             return _buildEventCard(eventData[index]);
           },
