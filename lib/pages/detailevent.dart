@@ -1,3 +1,4 @@
+import 'package:eventiss/pages/payementpage.dart';
 import 'package:flutter/material.dart';
 
 class detailevent extends StatefulWidget {
@@ -232,7 +233,22 @@ class _detaileventState extends State<detailevent> {
           Padding(
             padding: EdgeInsets.all(16),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => paymentpage(
+                      title: widget.eventData['title']!,
+                      ticketType: selectedTicketType,
+                      quantity: quantity,
+                      date: widget.eventData['date']!,
+                      location: 'Place de l\'Amazone', // Vous pouvez ajouter cette info dans eventData
+                      image: widget.eventData['image']!,
+                      amount: 15000, // Remplacez par le vrai prix selon le type de ticket
+                    ),
+                  ),
+                );
+              },
               child: Text(
                 'Réserver',
                 style: TextStyle(

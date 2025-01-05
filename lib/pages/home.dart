@@ -1,5 +1,6 @@
 import 'package:eventiss/pages/event.dart';
 import 'package:eventiss/pages/eventpop.dart';
+import 'package:eventiss/widgets/catpopWidget.dart';
 import 'package:flutter/material.dart';
 import '../widgets/homeAppBar.dart';
 import '../widgets/categoriesWidget.dart';
@@ -58,7 +59,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           SizedBox(height: 20),
-          cardforevent(),
+          catpopwidget(),
 
 
         ],
