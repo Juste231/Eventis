@@ -183,25 +183,27 @@ class _paymentpageState extends State<paymentpage> {
 
             SizedBox(height: 24),
             ElevatedButton(
-              onPressed:  () {
+              onPressed: selectedPaymentMethod != null
+                  ? () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => validation(),
+                    builder: (context) => const validation(),
                   ),
                 );
                 // Ajouter ici la logique de paiement
-                // Vous pouvez accéder à toutes les informations via widget.
-                // et les contrôleurs (operatorController, numberController, emailController)
-              },
+              }
+                  : null, // Désactivé si aucun moyen de paiement n'est sélectionné
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF0F1728),
-                minimumSize: Size(double.infinity, 50),
+                backgroundColor: selectedPaymentMethod != null
+                    ? const Color(0xFF0F1728) // Couleur activée
+                    : Colors.grey, // Couleur désactivée
+                minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 'Payer',
                 style: TextStyle(
                   fontSize: 16,
@@ -210,6 +212,7 @@ class _paymentpageState extends State<paymentpage> {
                 ),
               ),
             ),
+
           ],
         ),
       ),
