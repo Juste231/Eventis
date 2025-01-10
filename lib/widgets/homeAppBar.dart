@@ -1,3 +1,4 @@
+import 'package:eventiss/pages/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 class homeAppBar extends StatefulWidget {
@@ -36,7 +37,12 @@ class _homeAppBarState extends State<homeAppBar> {
                   badgeContent: Text('3'),
                   child: InkWell(
                     // Fonction de redirection lors du clic
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => notificationspage()),
+                      );
+                    },
                     child: Icon(
                       Icons.notifications_active_outlined,
                       size: 32,

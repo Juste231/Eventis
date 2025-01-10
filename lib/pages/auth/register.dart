@@ -1,4 +1,5 @@
 import 'package:eventiss/pages/auth/login.dart';
+import 'package:eventiss/pages/bottomnav.dart';
 import 'package:eventiss/pages/home.dart';
 import 'package:flutter/material.dart';
 
@@ -122,7 +123,7 @@ class SignUpScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Home(),
+                                builder: (context) => bottomnav(),
                               ),
                             );
                           },

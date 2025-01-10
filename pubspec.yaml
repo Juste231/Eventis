@@ -41,6 +41,7 @@ dependencies:
   curved_navigation_bar: ^1.0.6
   font_awesome_flutter: ^10.8.0
   badges: ^3.1.2
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +76,8 @@ flutter:
       - images/mark5.jpg
       - images/mark1.jpg
       - images/mark2.jpeg
+      - images/ticket.jpeg
+      - images/qr.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

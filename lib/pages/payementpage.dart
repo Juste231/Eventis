@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:eventiss/pages/validation.dart';
 
 class paymentpage extends StatefulWidget {
-  final Map<String, dynamic> reservationData;
+  final String title;
+  final String ticketType;
+  final int quantity;
+  final String date;
+  final String location;
+  final String image;
+  final double amount;
 
   const paymentpage({
     Key? key,
-    required this.reservationData,
+    required this.title,
+    required this.ticketType,
+    required this.quantity,
+    required this.date,
+    required this.location,
+    required this.image,
+    required this.amount,
   }) : super(key: key);
 
   @override
@@ -18,10 +31,9 @@ class _paymentpageState extends State<paymentpage> {
   final TextEditingController numberController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
-  // Structure des modes de paiement et leurs champs
   final Map<String, Map<String, dynamic>> paymentMethods = {
     'Mobile Money': {
-      'icon': 'assets/icons/mobile_money.png',
+      'icon': '',
       'subtitle': 'MTN, MOOV, WAVE',
       'fields': ['Opérateur', 'Numéro', 'Email']
     },
@@ -61,7 +73,7 @@ class _paymentpageState extends State<paymentpage> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.asset(
-                      widget.reservationData['image'] ?? '',
+                      widget.image,
                       width: 60,
                       height: 60,
                       fit: BoxFit.cover,
@@ -73,13 +85,13 @@ class _paymentpageState extends State<paymentpage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${widget.reservationData['title']} - ${widget.reservationData['ticketType']}',
+                          '${widget.title} - ${widget.ticketType}',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 4),
-                        Text(widget.reservationData['date'] ?? ''),
-                        Text(widget.reservationData['location'] ?? ''),
-                        Text('Qté: ${widget.reservationData['quantity']}'),
+                        Text(widget.date),
+                        Text(widget.location),
+                        Text('Qté: ${widget.quantity}'),
                       ],
                     ),
                   ),
@@ -94,7 +106,6 @@ class _paymentpageState extends State<paymentpage> {
             ),
             SizedBox(height: 16),
 
-            // Menu déroulant des modes de paiement
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey[300]!),
@@ -111,11 +122,7 @@ class _paymentpageState extends State<paymentpage> {
                       value: method,
                       child: Row(
                         children: [
-                          Image.asset(
-                            paymentMethods[method]!['icon'],
-                            width: 24,
-                            height: 24,
-                          ),
+                          Icon(Icons.abc) ,
                           SizedBox(width: 12),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,27 +152,25 @@ class _paymentpageState extends State<paymentpage> {
             ),
             SizedBox(height: 24),
 
-            // Champs dynamiques basés sur le mode de paiement
             if (selectedPaymentMethod != null) ...[
               ...paymentMethods[selectedPaymentMethod]!['fields']
                   .map((field) => buildTextField(field))
                   .toList(),
 
-              // Montant
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Montant',
+                      'Montant Total',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      '${widget.reservationData['amount']} FCFA',
+                      '${(widget.amount * widget.quantity).toStringAsFixed(0)} FCFA',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -176,18 +181,29 @@ class _paymentpageState extends State<paymentpage> {
               ),
             ],
 
-            // Bouton Payer
             SizedBox(height: 24),
             ElevatedButton(
-              onPressed: selectedPaymentMethod == null ? null : () {},
+              onPressed: selectedPaymentMethod != null
+                  ? () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const validation(),
+                  ),
+                );
+                // Ajouter ici la logique de paiement
+              }
+                  : null, // Désactivé si aucun moyen de paiement n'est sélectionné
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF0F1728),
-                minimumSize: Size(double.infinity, 50),
+                backgroundColor: selectedPaymentMethod != null
+                    ? const Color(0xFF0F1728) // Couleur activée
+                    : Colors.grey, // Couleur désactivée
+                minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 'Payer',
                 style: TextStyle(
                   fontSize: 16,
@@ -196,6 +212,7 @@ class _paymentpageState extends State<paymentpage> {
                 ),
               ),
             ),
+
           ],
         ),
       ),
@@ -206,6 +223,9 @@ class _paymentpageState extends State<paymentpage> {
     return Padding(
       padding: EdgeInsets.only(bottom: 16),
       child: TextField(
+        controller: label == 'Opérateur' ? operatorController :
+        label == 'Numéro' || label.contains('carte') ? numberController :
+        label == 'Email' ? emailController : null,
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(
