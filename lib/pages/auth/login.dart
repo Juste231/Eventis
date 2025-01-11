@@ -1,9 +1,72 @@
+import 'package:dio/dio.dart';
+import 'package:eventiss/api/models/authenticated_user.dart';
+import 'package:eventiss/api/services/user_service.dart';
 import 'package:eventiss/pages/auth/recuperation.dart';
 import 'package:eventiss/pages/auth/register.dart';
+import 'package:eventiss/pages/bottomnav.dart';
+import 'package:eventiss/pages/home.dart';
 import 'package:flutter/material.dart';
-class login extends StatelessWidget {
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
+class login extends StatefulWidget {
   const login({super.key});
 
+  @override
+  State<login> createState() => _loginState();
+}
+
+class _loginState extends State<login> {
+  final formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  bool isLoading = false;
+  UserService userService = UserService();
+
+  loginUser() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      Map<String, dynamic> data = {
+        'email': emailController.text,
+        'password': passwordController.text
+      };
+
+      AuthenticatedUser user = await userService.login(data);
+      final sharedPref = await SharedPreferences.getInstance();
+
+      sharedPref.setString("token", user.token!);
+
+      Fluttertoast.showToast(
+          msg: "Utilisateur connecté avec succès",
+          gravity: ToastGravity.TOP_RIGHT,
+      );
+
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Home())
+      );
+
+    } on DioException catch (e) {
+      if (e.response != null) {
+        print(e.response?.data);
+        print(e.response?.statusCode);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+      Fluttertoast.showToast(msg: "Une erreur est survenue");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +97,9 @@ class login extends StatelessWidget {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
-                    child: Column(
+                    child: Form(
+                      key: formKey,
+                      child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const SizedBox(height: 32),
@@ -49,8 +114,9 @@ class login extends StatelessWidget {
                         const SizedBox(height: 32),
                         // Champs de formulaire
                         TextFormField(
+                          controller: emailController,
                           decoration: InputDecoration(
-                            hintText: 'Email',
+                            label: Text("Email *"),
                             filled: true,
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
@@ -63,11 +129,20 @@ class login extends StatelessWidget {
                             ),
                           ),
                           keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Veuillez entrer votre email';
+                            } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$').hasMatch(value)) {
+                              return 'Veuillez entrer un email valide';
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
+                          controller: passwordController,
                           decoration: InputDecoration(
-                            hintText: 'Mot de passe',
+                            label: Text("Mot de passe *"),
                             filled: true,
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
@@ -80,11 +155,23 @@ class login extends StatelessWidget {
                             ),
                           ),
                           obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Veuillez entrer votre mot de passe';
+                            } else if (value.length < 6) {
+                              return 'Le mot de passe doit contenir au moins 6 caractères';
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(height: 32),
                         // Bouton Valider
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            if(formKey.currentState!.validate()) {
+                              await loginUser();
+                            }
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFFFFDFD1),
                             shape: RoundedRectangleBorder(
@@ -92,7 +179,10 @@ class login extends StatelessWidget {
                             ),
                             padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
-                          child: const Text(
+                          child: isLoading ? const CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                          ) :
+                          const Text(
                             'Valider',
                             style: TextStyle(
                               fontSize: 16,
@@ -154,7 +244,8 @@ class login extends StatelessWidget {
                           ],
                         )
                       ],
-                    ),
+                    ),)
+
                   ),
                 ),
               ],
