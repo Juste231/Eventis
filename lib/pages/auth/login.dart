@@ -158,8 +158,12 @@ class _loginState extends State<login> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Veuillez entrer votre mot de passe';
-                            } else if (value.length < 6) {
-                              return 'Le mot de passe doit contenir au moins 6 caractères';
+                            }
+                            final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)');
+                            if (!regex.hasMatch(value)) {
+                              return "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre.";
+                            } else if(value.length < 6) {
+                              return "Le mot de passe doit contenir au moins 6 caractères";
                             }
                             return null;
                           },

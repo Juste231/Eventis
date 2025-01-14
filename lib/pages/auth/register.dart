@@ -37,7 +37,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       await userService.register(data);
 
-      print(data);
 
       firstnameController.text = "";
       lastnameController.text = "";
@@ -131,6 +130,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Ce champ est requis';
+                              }
+                              final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)');
+                              if (!regex.hasMatch(value)) {
+                                return "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre.";
                               }
                               return null;},
                             ),
