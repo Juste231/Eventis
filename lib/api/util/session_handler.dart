@@ -1,5 +1,6 @@
 import 'package:eventiss/pages/auth/login.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionHandler {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -27,5 +28,15 @@ class SessionHandler {
         ],
       ),
     );
+  }
+
+  static Future<void> logout() async {
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
+    final sharedPref = await SharedPreferences.getInstance();
+    await sharedPref.remove("token");
+
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => login()));
   }
 }

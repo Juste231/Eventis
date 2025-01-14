@@ -48,7 +48,7 @@ class _loginState extends State<login> {
 
       Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Home())
+          MaterialPageRoute(builder: (context) => const bottomnav())
       );
 
     } on DioException catch (e) {

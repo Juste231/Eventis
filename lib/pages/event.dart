@@ -1,45 +1,26 @@
+import 'package:dio/dio.dart';
+import 'package:eventiss/api/services/event_service.dart';
 import 'package:eventiss/pages/home.dart';
 import 'package:eventiss/pages/detailevent.dart';
 import 'package:flutter/material.dart';
 
 class event extends StatefulWidget {
-  const event({super.key});
+  final List<Map<String, String>> eventData;
+  const event({super.key, required this.eventData});
 
   @override
   State<event> createState() => _eventState();
 }
 
 class _eventState extends State<event> {
-  final List<Map<String, String>> eventData = [
-    {
-      'image': 'images/ça.jpeg',
-      'title': 'WELOVEEEYA',
-      'subtitle': 'Weloveeya',
-      'category': 'CONCERT',
-      'date': '30 Dec',
-    },
-    {
-      'image': 'images/mark1.jpg',
-      'title': 'WELOVEEEYA',
-      'subtitle': 'Weloveeya',
-      'category': 'CONCERT',
-      'date': '30 Dec',
-    },
-    {
-      'image': 'images/mark2.jpeg',
-      'title': 'WELOVEEEYA',
-      'subtitle': 'Weloveeya',
-      'category': 'CONCERT',
-      'date': '30 Dec',
-    },
-    {
-      'image': 'images/Hoy.jpeg',
-      'title': 'WELOVEEEYA',
-      'subtitle': 'Weloveeya',
-      'category': 'CONCERT',
-      'date': '30 Dec',
-    },
-  ];
+  late List<Map<String, String>> eventData;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    eventData = widget.eventData;
+  }
 
   @override
   Widget build(BuildContext context) {

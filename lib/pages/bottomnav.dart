@@ -1,9 +1,12 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:eventiss/pages/profil.dart';
 import 'package:eventiss/pages/reservation.dart';
 import 'package:eventiss/pages/home.dart';
+
+import '../api/services/event_service.dart';
 
 class bottomnav extends StatefulWidget {
   const bottomnav({super.key});
@@ -13,12 +16,14 @@ class bottomnav extends StatefulWidget {
 }
 
 class _bottomnavState extends State<bottomnav> {
+
   int index = 0;
   final screens = [
     Home(),
     reservation(),
     profil(),
   ];
+
   @override
   Widget build(BuildContext context) {
 

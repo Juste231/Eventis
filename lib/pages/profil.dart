@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:eventiss/api/models/authenticated_user.dart';
 import 'package:eventiss/api/services/user_service.dart';
+import 'package:eventiss/api/util/session_handler.dart';
 import 'package:eventiss/pages/historique.dart';
 import 'package:eventiss/pages/preference.dart';
 import 'package:eventiss/pages/securite.dart';
@@ -29,6 +30,14 @@ class _profilState extends State<profil> {
     loadUserData();
   }
 
+  logout() async {
+    try {
+      await SessionHandler.logout();
+    } catch (e) {
+      print(e);
+      Fluttertoast.showToast(msg: "Une erreur est survenue", gravity: ToastGravity.TOP_RIGHT);
+    }
+  }
   // Charger les données utilisateur
   Future<void> loadUserData() async {
     setState(() {
@@ -225,9 +234,9 @@ class _profilState extends State<profil> {
                             child: Text('Annuler'),
                           ),
                           TextButton(
-                            onPressed: () {
+                            onPressed: () async {
                               Navigator.pop(context);
-
+                              await logout();
                             },
                             child: Text(
                               'Déconnexion',
