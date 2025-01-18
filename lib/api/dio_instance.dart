@@ -4,9 +4,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Dio configureDio() {
   final options = BaseOptions(
-    baseUrl: 'http://192.168.122.1:3000/api',
+    baseUrl: 'https://backend-eventis.onrender.com/api',
     connectTimeout: Duration(seconds: 30),
     receiveTimeout: Duration(seconds: 30),
+    headers: {
+      'Accept': 'application/json',
+      'Content-type': 'application/json'
+    },
   );
   final dio = Dio(options);
 

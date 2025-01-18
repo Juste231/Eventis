@@ -51,13 +51,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     } on DioException catch (e) {
       if (e.response != null) {
+        print("Il y a une erreur");
         print(e.response?.data);
         print(e.response?.statusCode);
       } else {
+        print("Il y a une erreur");
         // Something happened in setting up or sending the request that triggered an Error
         print(e.requestOptions);
         print(e.message);
-
       }
       Fluttertoast.showToast(msg: "Une erreur est survenue");
     } finally {
