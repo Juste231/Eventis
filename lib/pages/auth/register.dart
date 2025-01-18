@@ -131,11 +131,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               if (value == null || value.isEmpty) {
                                 return 'Ce champ est requis';
                               }
-                              final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)');
-                              if (!regex.hasMatch(value)) {
-                                return "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre.";
-                              }
-                              return null;},
+                                return null;
+                              },
                             ),
                           const SizedBox(height: 16),
                           TextFormField(
@@ -206,8 +203,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Veuillez entrer votre mot de passe';
-                              } else if (value.length < 6) {
-                                return 'Le mot de passe doit contenir au moins 6 caractères';
+                              }
+                              final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)');
+                              if (!regex.hasMatch(value)) {
+                                return "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre.";
+                              } else if(value.length < 6) {
+                                return "Le mot de passe doit contenir au moins 6 caractères";
                               }
                               return null;
                               },
