@@ -120,7 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child:  Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          const SizedBox(height: 32),
+                          const SizedBox(height: 5),
                           const Text(
                             'Bienvenue',
                             style: TextStyle(
@@ -129,7 +129,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               color: Colors.black,
                             ),
                           ),
-                          const SizedBox(height: 32),
+                          const SizedBox(height: 5),
                           // Champs de formulaire
                           TextFormField(
                             controller: lastnameController,
