@@ -26,15 +26,20 @@ class _loginState extends State<login> {
   final passwordController = TextEditingController();
 
   bool isLoading = false;
+  bool isNavigating = false;
   UserService userService = UserService();
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    Future.delayed(Duration(seconds: 5), (){
-      checkLoginStatus(context);
-    } );
+
+    Future.delayed(Duration(seconds: 5), () async {
+      if (!isNavigating) {
+        isNavigating = true;
+        await checkLoginStatus(context);
+      }
+    });
   }
 
   loginUser() async {
