@@ -1,5 +1,3 @@
-import 'package:dio/dio.dart';
-import 'package:eventiss/api/services/event_service.dart';
 import 'package:eventiss/pages/home.dart';
 import 'package:eventiss/pages/detailevent.dart';
 import 'package:flutter/material.dart';

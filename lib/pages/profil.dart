@@ -2,9 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:eventiss/api/models/authenticated_user.dart';
 import 'package:eventiss/api/services/user_service.dart';
 import 'package:eventiss/api/util/session_handler.dart';
-import 'package:eventiss/pages/historique.dart';
-import 'package:eventiss/pages/preference.dart';
-import 'package:eventiss/pages/securite.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 

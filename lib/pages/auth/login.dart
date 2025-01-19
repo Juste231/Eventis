@@ -6,8 +6,11 @@ import 'package:eventiss/pages/auth/register.dart';
 import 'package:eventiss/pages/bottomnav.dart';
 import 'package:eventiss/pages/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../api/util/utils.dart';
 
 
 class login extends StatefulWidget {
@@ -24,6 +27,15 @@ class _loginState extends State<login> {
 
   bool isLoading = false;
   UserService userService = UserService();
+
+  @override
+  void initState(){
+    super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    Future.delayed(Duration(seconds: 5), (){
+      checkLoginStatus(context);
+    } );
+  }
 
   loginUser() async {
     setState(() {

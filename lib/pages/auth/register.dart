@@ -1,18 +1,23 @@
 import 'package:dio/dio.dart';
 import 'package:eventiss/api/services/user_service.dart';
+import 'package:eventiss/api/util/utils.dart';
 import 'package:eventiss/pages/auth/login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
+
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
+
 class _SignUpScreenState extends State<SignUpScreen> {
+
   final formKey = GlobalKey<FormState>();
   final lastnameController = TextEditingController();
   final firstnameController = TextEditingController();
@@ -21,6 +26,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   UserService userService = UserService();
   bool isLoading = false;
+  @override
+  void initState(){
+    super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    Future.delayed(Duration(seconds: 5), (){
+      checkLoginStatus(context);
+    } );
+  }
 
   registerUser() async {
     setState(() {
