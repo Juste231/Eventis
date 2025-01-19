@@ -25,13 +25,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final passwordController = TextEditingController();
 
   UserService userService = UserService();
+  bool isNavigating = false;
   bool isLoading = false;
   @override
   void initState(){
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    Future.delayed(Duration(seconds: 5), (){
-      checkLoginStatus(context);
+    Future.delayed(Duration(seconds: 5), () async {
+      if (!isNavigating) {
+        isNavigating = true;
+        await checkLoginStatus(context);
+        isNavigating = false;
+      }
     } );
   }
 

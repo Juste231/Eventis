@@ -38,6 +38,7 @@ class _loginState extends State<login> {
       if (!isNavigating) {
         isNavigating = true;
         await checkLoginStatus(context);
+        isNavigating = false;
       }
     });
   }
