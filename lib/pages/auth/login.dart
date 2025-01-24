@@ -71,14 +71,17 @@ class _loginState extends State<login> {
 
     } on DioException catch (e) {
       if (e.response != null) {
-        print(e.response?.data);
+        if(e.response?.statusCode == 404) {
+          Fluttertoast.showToast(msg: "Le nom d'utilisateur ou le mot de passe est incorrect");
+        }
         print(e.response?.statusCode);
+        print(e.response?.data);
+        Fluttertoast.showToast(msg: "Une erreur est survenue");
       } else {
-        // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
+        print("Not dio error ${e.requestOptions}");
+        print("Not dio error ${e.message}");
+        Fluttertoast.showToast(msg: "Une erreur est survenue");
       }
-      Fluttertoast.showToast(msg: "Une erreur est survenue");
     } finally {
       setState(() {
         isLoading = false;

@@ -1,9 +1,11 @@
+import 'package:eventiss/api/models/event.dart';
 import 'package:eventiss/pages/home.dart';
 import 'package:eventiss/pages/detailevent.dart';
+import 'package:eventiss/widgets/image_loader.dart';
 import 'package:flutter/material.dart';
 
 class event extends StatefulWidget {
-  final List<Map<String, String>> eventData;
+  final List<Event> eventData;
   const event({super.key, required this.eventData});
 
   @override
@@ -11,7 +13,7 @@ class event extends StatefulWidget {
 }
 
 class _eventState extends State<event> {
-  late List<Map<String, String>> eventData;
+  late List<Event> eventData;
 
   @override
   void initState() {
@@ -72,7 +74,7 @@ class _eventState extends State<event> {
   }
 
   Widget _buildEventCard({
-    required Map<String, String> event,
+    required Event event,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
@@ -96,9 +98,23 @@ class _eventState extends State<event> {
             child: Stack(
               children: [
                 Positioned.fill(
-                  child: Image.asset(
-                    event['image']!,
-                    fit: BoxFit.cover,
+                  child: CustomImage(
+                    imageUrl: event.image,
+                    placeholder: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: Colors.grey.shade300,
+                      child: Center(
+                        child: Icon(
+                          Icons.image_outlined,
+                          color: Colors.grey.shade500,
+                          size: 50,
+                        ),
+                      ),
+                    ),
+                    errorWidget: Center(
+                      child: Icon(Icons.error, color: Colors.red, size: 50),
+                    ),
                   ),
                 ),
                 Positioned(
@@ -111,7 +127,7 @@ class _eventState extends State<event> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
-                      event['category']!,
+                      event.category!,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -125,7 +141,7 @@ class _eventState extends State<event> {
           ),
           SizedBox(height: 8),
           Text(
-            event['title']!,
+            event.title!,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -133,7 +149,7 @@ class _eventState extends State<event> {
           ),
           SizedBox(height: 4),
           Text(
-            event['date']!,
+            event.date!.toIso8601String(),
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey,

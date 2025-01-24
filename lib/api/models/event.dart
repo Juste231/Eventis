@@ -14,6 +14,8 @@ class Event {
   int? capacity;
   int? ticketsSold;
   int? price;
+  String? category;
+  String? image;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -24,6 +26,8 @@ class Event {
         this.location,
         this.date,
         this.capacity,
+        this.category,
+        this.image,
         this.ticketsSold,
         this.price,
         this.createdAt,
@@ -34,6 +38,8 @@ class Event {
       title: json['title'],
       description: json['description'],
       location: json['location'],
+      category: json['category'],
+      image: json['image'],
       date: json['date'] == null ? null : DateTime.parse(json["date"]),
       capacity: json['capacity'],
       ticketsSold: json['ticketsSold'],
@@ -50,6 +56,8 @@ class Event {
     data['location'] = location;
     data['date'] = date?.toIso8601String();
     data['capacity'] = capacity;
+    data['image'] = image;
+    data['category'] = category;
     data['ticketsSold'] = ticketsSold;
     data['price'] = price;
     data['createdAt'] = createdAt?.toIso8601String();

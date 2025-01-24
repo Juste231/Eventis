@@ -1,5 +1,10 @@
+import 'package:eventiss/api/models/event.dart';
+import 'package:eventiss/api/util/eventprovider.dart';
 import 'package:eventiss/pages/detailevent.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'image_loader.dart';
 
 
 class catpopwidget extends StatefulWidget {
@@ -10,38 +15,15 @@ class catpopwidget extends StatefulWidget {
 }
 
 class _catpopwidgetState extends State<catpopwidget> {
-  final List<Map<String, String>> eventData = [
-    {
-      'image': 'images/ça.jpeg',
-      'title': 'Data',
-      'subtitle': 'Weloveeya',
-      'category': 'Technologie',
-      'date': '30 Décembre 2024'
-    },
-    {
-      'image': 'images/mark1.jpg',
-      'title': 'Data',
-      'subtitle': 'Weloveeya',
-      'category': 'Innovation',
-      'date': '31 Décembre 2024'
-    },
-    {
-      'image': 'images/mark2.jpeg',
-      'title': 'Data',
-      'subtitle': 'Weloveeya',
-      'category': 'Design',
-      'date': '1 Janvier 2025'
-    },
-    {
-      'image': 'images/Hoy.jpeg',
-      'title': 'Data',
-      'subtitle': 'Weloveeya',
-      'category': 'Marketing',
-      'date': '2 Janvier 2025'
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<EventProvider>(context, listen: false).fetchEvents();
+    });
+  }
 
-  Widget _buildEventCard(Map<String, String> event) {
+  Widget _buildEventCard(Event event) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -62,9 +44,23 @@ class _catpopwidgetState extends State<catpopwidget> {
           children: [
             // Image de fond
             Positioned.fill(
-              child: Image.asset(
-                event['image']!,
-                fit: BoxFit.cover,
+              child: CustomImage(
+                imageUrl: event.image,
+                placeholder: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.grey.shade300,
+                  child: Center(
+                    child: Icon(
+                      Icons.image_outlined,
+                      color: Colors.grey.shade500,
+                      size: 50,
+                    ),
+                  ),
+                ),
+                errorWidget: Center(
+                  child: Icon(Icons.error, color: Colors.red, size: 50),
+                ),
               ),
             ),
             // Catégorie en haut à gauche
@@ -78,7 +74,7 @@ class _catpopwidgetState extends State<catpopwidget> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  event['category']!,
+                  event.category != null ? event.category! : "CINEMA",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 12,
@@ -109,7 +105,7 @@ class _catpopwidgetState extends State<catpopwidget> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      event['title']!,
+                      event.title!,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -118,7 +114,7 @@ class _catpopwidgetState extends State<catpopwidget> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      event['date']!,
+                      event.date!.toIso8601String(),
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.8),
                         fontSize: 12,
@@ -136,33 +132,28 @@ class _catpopwidgetState extends State<catpopwidget> {
 
   @override
   Widget build(BuildContext context) {
+    final eventProvider = Provider.of<EventProvider>(context);
+    if(eventProvider.isLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    final List<Event> events = eventProvider.events;
+
     return Container(
       height: 200,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
-          itemCount: eventData.length,
+          itemCount: events.length,
           separatorBuilder: (context, index) => SizedBox(width: 16),
           itemBuilder: (context, index) {
-            return _buildEventCard(eventData[index]);
+            return _buildEventCard(events[index]);
           },
         ),
       ),
     );
-  }
-}
-
-// Méthode à implémenter pour charger les données depuis l'API
-Future<void> fetchEvents() async {
-  // Exemple de structure pour l'appel API
-  try {
-    // const response = await http.get('votre_url_api/events');
-    // final data = json.decode(response.body);
-    // setState(() {
-    //   eventData = data;
-    // });
-  } catch (e) {
-    print('Erreur lors du chargement des événements: $e');
   }
 }

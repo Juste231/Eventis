@@ -1,8 +1,10 @@
+import 'package:eventiss/api/models/event.dart';
 import 'package:eventiss/pages/payementpage.dart';
+import 'package:eventiss/widgets/image_loader.dart';
 import 'package:flutter/material.dart';
 
 class detailevent extends StatefulWidget {
-  final Map<String, String> eventData;
+  final Event eventData;
 
   const detailevent({super.key, required this.eventData});
 
@@ -37,11 +39,23 @@ class _detaileventState extends State<detailevent> {
           // Stack avec image et bouton retour (reste inchangé)
           Stack(
             children: [
-              Image.asset(
-                widget.eventData['image']!,
-                width: double.infinity,
-                height: 400,
-                fit: BoxFit.cover,
+              CustomImage(
+                imageUrl: widget.eventData.image,
+                placeholder: Container(
+                  width: double.infinity,
+                  height: 400,
+                  color: Colors.grey.shade300,
+                  child: Center(
+                    child: Icon(
+                      Icons.image_outlined,
+                      color: Colors.grey.shade500,
+                      size: 50,
+                    ),
+                  ),
+                ),
+                errorWidget: Center(
+                  child: Icon(Icons.error, color: Colors.red, size: 50),
+                ),
               ),
               SafeArea(
                 child: Padding(
@@ -69,19 +83,14 @@ class _detaileventState extends State<detailevent> {
                         child: Row(
                           children: [
                             Text(
-                              widget.eventData['date']!.split(' ')[0],
+                              widget.eventData.date!.toLocal().toIso8601String(),
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             SizedBox(width: 4),
-                            Text(
-                              widget.eventData['date']!.split(' ')[1].toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
+
                           ],
                         ),
                       ),
@@ -100,7 +109,7 @@ class _detaileventState extends State<detailevent> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.eventData['category']!,
+                      widget.eventData.category != null ? widget.eventData.category! : "CINEMA",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
@@ -108,7 +117,7 @@ class _detaileventState extends State<detailevent> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      widget.eventData['title']!,
+                      widget.eventData.title!,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -238,29 +247,29 @@ class _detaileventState extends State<detailevent> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => paymentpage(
-                      title: widget.eventData['title']!,
+                      title: widget.eventData.title!,
                       ticketType: selectedTicketType,
                       quantity: quantity,
-                      date: widget.eventData['date']!,
+                      date: widget.eventData.date!.toIso8601String(),
                       location: 'Place de l\'Amazone', // Vous pouvez ajouter cette info dans eventData
-                      image: widget.eventData['image']!,
+                      image: widget.eventData.image!,
                       amount: 15000, // Remplacez par le vrai prix selon le type de ticket
                     ),
                   ),
                 );
               },
-              child: Text(
-                'Réserver',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF0F1728),
                 minimumSize: Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                'Réserver',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
