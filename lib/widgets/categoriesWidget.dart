@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:eventiss/pages/detailevent.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 class categoriesWidget extends StatelessWidget {
   const categoriesWidget({super.key});
@@ -254,7 +255,7 @@ class _cardforeventState extends State<cardforevent> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      event.date!.toIso8601String(),
+                      DateFormat.yMMMEd().format(event.date!),
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.8),
                         fontSize: 12,

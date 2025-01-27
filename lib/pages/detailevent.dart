@@ -1,7 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:eventiss/api/models/event.dart';
+import 'package:eventiss/api/services/reservation_service.dart';
 import 'package:eventiss/pages/payementpage.dart';
 import 'package:eventiss/widgets/image_loader.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 class detailevent extends StatefulWidget {
   final Event eventData;
@@ -15,6 +20,9 @@ class detailevent extends StatefulWidget {
 class _detaileventState extends State<detailevent> {
   String selectedTicketType = 'Standard'; // Valeur par défaut
   int quantity = 1; // État pour la quantité
+  ReservationService reservationService = ReservationService();
+
+  bool isLoading = false;
 
   // Fonction pour décrémenter
   void decrementQuantity() {
@@ -25,12 +33,67 @@ class _detaileventState extends State<detailevent> {
     }
   }
 
+  reservations() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      Map<String, dynamic> data = {
+        "eventId": widget.eventData.id,
+        "numberOfTickets": quantity
+      };
+      final result = await reservationService.create(data);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => paymentpage(
+            title: widget.eventData.title!,
+            ticketType: selectedTicketType,
+            quantity: quantity,
+            date: DateFormat.yMMMEd('fr_FR')
+                .format(widget.eventData.date!),
+            location: widget.eventData.location!,
+            // Vous pouvez ajouter cette info dans eventData
+            image: widget.eventData.image!,
+            amount: widget.eventData.price!
+                .toDouble(), // Remplacez par le vrai prix selon le type de ticket
+          ),
+        ),
+      );
+      print("All reservations are created $result");
+    } on DioException catch (e) {
+      if (e.response != null) {
+        if (e.response?.statusCode == 404) {
+          Fluttertoast.showToast(msg: "Event not found");
+        } else if (e.response?.statusCode == 400) {
+          Fluttertoast.showToast(msg: "Not enough tickets available");
+        }
+
+        print(e.response?.statusCode);
+        print(e.response?.data);
+
+        Fluttertoast.showToast(msg: "Une erreur est survenue");
+      } else {
+        print("Not dio error ${e.requestOptions}");
+        print("Not dio error ${e.message}");
+
+        Fluttertoast.showToast(msg: "Une erreur est survenue");
+      }
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   // Fonction pour incrémenter
   void incrementQuantity() {
     setState(() {
       quantity++;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +138,8 @@ class _detaileventState extends State<detailevent> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
@@ -83,14 +147,14 @@ class _detaileventState extends State<detailevent> {
                         child: Row(
                           children: [
                             Text(
-                              widget.eventData.date!.toLocal().toIso8601String(),
+                              DateFormat.yMMMEd('fr_FR')
+                                  .format(widget.eventData.date!),
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             SizedBox(width: 4),
-
                           ],
                         ),
                       ),
@@ -109,7 +173,9 @@ class _detaileventState extends State<detailevent> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.eventData.category != null ? widget.eventData.category! : "CINEMA",
+                      widget.eventData.category != null
+                          ? widget.eventData.category!
+                          : "CINEMA",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
@@ -154,7 +220,7 @@ class _detaileventState extends State<detailevent> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '15,000 FCFA',
+                          widget.eventData.price.toString() + ' FCFA',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -171,8 +237,11 @@ class _detaileventState extends State<detailevent> {
                               value: selectedTicketType,
                               isExpanded: true,
                               padding: EdgeInsets.symmetric(horizontal: 16),
-                              items: ['Standard', 'VIP', 'Premium']
-                                  .map<DropdownMenuItem<String>>((String value) {
+                              items: [
+                                'Standard',
+                                'VIP',
+                                'Premium'
+                              ].map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(value),
@@ -192,7 +261,8 @@ class _detaileventState extends State<detailevent> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 8),
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey[300]!),
                                 borderRadius: BorderRadius.circular(8),
@@ -205,13 +275,16 @@ class _detaileventState extends State<detailevent> {
                                     onTap: decrementQuantity,
                                     child: Icon(
                                       Icons.remove,
-                                      color: quantity > 1 ? Colors.black : Colors.grey,
+                                      color: quantity > 1
+                                          ? Colors.black
+                                          : Colors.grey,
                                     ),
                                   ),
                                   // Affichage de la quantité
                                   Container(
                                     constraints: BoxConstraints(minWidth: 40),
-                                    padding: EdgeInsets.symmetric(horizontal: 16),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16),
                                     child: Text(
                                       quantity.toString(),
                                       textAlign: TextAlign.center,
@@ -242,21 +315,8 @@ class _detaileventState extends State<detailevent> {
           Padding(
             padding: EdgeInsets.all(16),
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => paymentpage(
-                      title: widget.eventData.title!,
-                      ticketType: selectedTicketType,
-                      quantity: quantity,
-                      date: widget.eventData.date!.toIso8601String(),
-                      location: 'Place de l\'Amazone', // Vous pouvez ajouter cette info dans eventData
-                      image: widget.eventData.image!,
-                      amount: 15000, // Remplacez par le vrai prix selon le type de ticket
-                    ),
-                  ),
-                );
+              onPressed: () async {
+                await reservations();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF0F1728),
@@ -265,7 +325,9 @@ class _detaileventState extends State<detailevent> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text(
+              child: isLoading ? const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+              ) : Text(
                 'Réserver',
                 style: TextStyle(
                   fontSize: 16,

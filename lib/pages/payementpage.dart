@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:eventiss/pages/validation.dart';
 
+import '../widgets/image_loader.dart';
+
 class paymentpage extends StatefulWidget {
   final String title;
   final String ticketType;
@@ -72,11 +74,25 @@ class _paymentpageState extends State<paymentpage> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      widget.image,
+                    child: CustomImage(
                       width: 60,
                       height: 60,
-                      fit: BoxFit.cover,
+                      imageUrl: widget.image,
+                      placeholder: Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: Colors.grey.shade300,
+                        child: Center(
+                          child: Icon(
+                            Icons.image_outlined,
+                            color: Colors.grey.shade500,
+                            size: 50,
+                          ),
+                        ),
+                      ),
+                      errorWidget: Center(
+                        child: Icon(Icons.error, color: Colors.red, size: 50),
+                      ),
                     ),
                   ),
                   SizedBox(width: 12),

@@ -3,6 +3,7 @@ import 'package:eventiss/pages/home.dart';
 import 'package:eventiss/pages/detailevent.dart';
 import 'package:eventiss/widgets/image_loader.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class event extends StatefulWidget {
   final List<Event> eventData;
@@ -39,7 +40,7 @@ class _eventState extends State<event> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Home()),
+              MaterialPageRoute(builder: (context) => Home(eventData: widget.eventData)),
             );
           },
           icon: Icon(Icons.arrow_back_sharp),
@@ -149,7 +150,7 @@ class _eventState extends State<event> {
           ),
           SizedBox(height: 4),
           Text(
-            event.date!.toIso8601String(),
+            DateFormat.yMMMEd().format(event.date!),
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey,

@@ -2,6 +2,7 @@ import 'package:eventiss/api/models/event.dart';
 import 'package:eventiss/api/util/eventprovider.dart';
 import 'package:eventiss/pages/detailevent.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'image_loader.dart';
@@ -114,7 +115,7 @@ class _catpopwidgetState extends State<catpopwidget> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      event.date!.toIso8601String(),
+                      DateFormat.yMMMEd().format(event.date!),
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.8),
                         fontSize: 12,
