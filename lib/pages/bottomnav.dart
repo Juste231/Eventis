@@ -5,6 +5,8 @@ import 'package:eventiss/pages/profil.dart';
 import 'package:eventiss/pages/reservation.dart';
 import 'package:eventiss/pages/home.dart';
 
+import 'admin/add.dart';
+
 class bottomnav extends StatefulWidget {
   const bottomnav({super.key});
 
@@ -16,7 +18,7 @@ class _bottomnavState extends State<bottomnav> {
   int index = 0;
   final screens = [
     Home(),
-    reservation(),
+    AddTicketPage(),
     profil(),
   ];
   @override
@@ -30,7 +32,6 @@ class _bottomnavState extends State<bottomnav> {
 
     return Scaffold(
       extendBody: true,
-      backgroundColor: Colors.blue,
       body: screens[index],
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
