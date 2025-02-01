@@ -1,7 +1,4 @@
-import 'dart:ui';
-
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:eventiss/pages/profil.dart';
@@ -10,8 +7,9 @@ import 'package:eventiss/pages/home.dart';
 import 'package:provider/provider.dart';
 
 import '../api/models/event.dart';
-import '../api/services/event_service.dart';
 import '../api/util/eventprovider.dart';
+
+import 'admin/add.dart';
 
 class bottomnav extends StatefulWidget {
   const bottomnav({super.key});
@@ -31,8 +29,6 @@ class _bottomnavState extends State<bottomnav> {
   }
 
   int index = 0;
-
-
   @override
   Widget build(BuildContext context) {
   final eventProvider = Provider.of<EventProvider>(context);
@@ -46,7 +42,7 @@ class _bottomnavState extends State<bottomnav> {
     const profil(),
   ];
 
-  final items = [
+    final items = [
       Icon(CupertinoIcons.house , size: 30,),
       Icon(CupertinoIcons.tickets , size: 30,),
       Icon(Icons.account_circle_outlined, size: 30, ),
