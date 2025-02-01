@@ -128,7 +128,7 @@ class _eventState extends State<event> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
-                      event.category!,
+                      event.category != null ? event.category! : "CINEMA",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,

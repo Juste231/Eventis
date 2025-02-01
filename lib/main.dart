@@ -1,6 +1,9 @@
 
 import 'package:eventiss/api/util/eventprovider.dart';
 import 'package:eventiss/api/util/session_handler.dart';
+import 'package:eventiss/pages/historique.dart';
+import 'package:eventiss/pages/preference.dart';
+import 'package:eventiss/pages/securite.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +36,11 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: splashScreen(),
+      routes: {
+        '/preferences': (context) => preference(),
+        '/security': (context) => securite(),
+        '/history': (context) => historique(),
+      },
     );
   }
 }
