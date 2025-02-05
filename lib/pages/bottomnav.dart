@@ -6,6 +6,7 @@ import 'package:eventiss/pages/reservation.dart';
 import 'package:eventiss/pages/home.dart';
 
 import 'admin/add.dart';
+import 'admin/dashboard.dart';
 
 class bottomnav extends StatefulWidget {
   const bottomnav({super.key});
@@ -19,7 +20,7 @@ class _bottomnavState extends State<bottomnav> {
   final screens = [
     Home(),
     AddTicketPage(),
-    profil(),
+    DashboardScreen(),
   ];
   @override
   Widget build(BuildContext context) {

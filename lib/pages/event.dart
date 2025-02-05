@@ -55,12 +55,7 @@ class _eventState extends State<event> {
         backgroundColor: Colors.white,
         elevation: 5,
         leading: IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Home()),
-            );
-          },
+          onPressed: () => Navigator.pop(context),
           icon: Icon(Icons.arrow_back_sharp),
         ),
       ),

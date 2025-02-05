@@ -1,15 +1,34 @@
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatelessWidget {
+  final List<EventData> events = [
+    EventData(
+      name: 'ME 445',
+      imageUrl: 'images/mark5.jpg',
+    ),
+    EventData(
+      name: 'ME 446',
+      imageUrl: 'images/ça.jpeg',
+    ),
+    EventData(
+      name: 'ME 447',
+      imageUrl: 'images/mark1.jpg',
+    ),
+    EventData(
+      name: 'ME 448',
+      imageUrl: 'images/mark2.jpeg',
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      body: SafeArea(
+        backgroundColor: Colors.grey[50],
+        body: SafeArea(
+        child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.all(16.0),
+    child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header
               Row(
@@ -153,6 +172,7 @@ class DashboardScreen extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 
@@ -213,24 +233,61 @@ class DashboardScreen extends StatelessWidget {
           height: 120,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: 4,
+            itemCount: events.length,
             itemBuilder: (context, index) {
               return Container(
                 width: 200,
                 margin: const EdgeInsets.only(right: 12),
                 decoration: BoxDecoration(
-                  color: Colors.blue[900],
                   borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Text(
-                    'ME 445',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  image: DecorationImage(
+                    image: AssetImage(events[index].imageUrl),
+                    fit: BoxFit.cover,
                   ),
+                ),
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            Colors.black.withOpacity(0.7),
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.9),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.edit, size: 20),
+                          onPressed: () {},
+                          color: Colors.blue[900],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 8,
+                      left: 8,
+                      child: Text(
+                        events[index].name,
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               );
             },
@@ -239,4 +296,14 @@ class DashboardScreen extends StatelessWidget {
       ],
     );
   }
+}
+
+class EventData {
+  final String name;
+  final String imageUrl;
+
+  EventData({
+    required this.name,
+    required this.imageUrl,
+  });
 }
