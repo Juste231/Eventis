@@ -1,179 +1,223 @@
+import 'package:eventiss/api/models/event.dart';
+import 'package:eventiss/api/services/event_service.dart';
 import 'package:flutter/material.dart';
 
-class DashboardScreen extends StatelessWidget {
-  final List<EventData> events = [
-    EventData(
-      name: 'ME 445',
-      imageUrl: 'images/mark5.jpg',
-    ),
-    EventData(
-      name: 'ME 446',
-      imageUrl: 'images/ça.jpeg',
-    ),
-    EventData(
-      name: 'ME 447',
-      imageUrl: 'images/mark1.jpg',
-    ),
-    EventData(
-      name: 'ME 448',
-      imageUrl: 'images/mark2.jpeg',
-    ),
-  ];
+import '../../api/models/dashboard.dart';
+
+
+class DashboardScreen extends StatefulWidget {
+  final List<Event> eventData;
+  const DashboardScreen({super.key, required this.eventData});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+
+  Dashboard? stats;
+  bool isLoading = true;
+
+  EventService eventService = EventService();
+  @override
+  void initState() {
+    super.initState();
+    _loadStats();
+  }
+
+  Future<void> _loadStats() async {
+    try {
+      Dashboard fetchedStats = await eventService.fetchStats();
+      print("Fetched stats $fetchedStats");
+      setState(() {
+        stats = fetchedStats;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error while retrieving stats $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.grey[50],
-        body: SafeArea(
-        child: SingleChildScrollView(
-        child: Padding(
-        padding: const EdgeInsets.all(16.0),
-    child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Dashboard',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.notifications_outlined),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-              // Revenue Card
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFE5D9),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      backgroundColor: Colors.grey[50],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          '12 Janvier 2025',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.more_horiz,
-                            color: Colors.grey,
-                          ),
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
                     const Text(
-                      'XOF 617350',
+                      'Dashboard',
                       style: TextStyle(
-                        fontSize: 32,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      '491 Tickets vendus',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
+                    IconButton(
+                      icon: const Icon(Icons.notifications_outlined),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Revenue Card
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFE5D9),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${DateTime.now().day} ${_getMonthName(DateTime.now().month)} ${DateTime.now().year}',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.more_horiz,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {},
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Events Stats Card
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.blue.shade100),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Evènements',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'XOF ${stats?.totalRevenue ?? 0}',
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF1A237E),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Row(
-                            children: [
-                              Text(
-                                'Total',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                '172',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${stats?.totalTickets ?? 0} Tickets vendus',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        _buildStatCard('À venir', '27'),
-                        const SizedBox(width: 8),
-                        _buildStatCard('En cours', '42'),
-                        const SizedBox(width: 8),
-                        _buildStatCard('Terminés', '103'),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-              // Events Sections
-              _buildEventsSection('Evènements en cours'),
-              const SizedBox(height: 20),
-              _buildEventsSection('Evènements à venir'),
-            ],
+                // Events Stats Card
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.blue.shade100),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Evènements',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1A237E),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'Total',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  '${stats?.totalEvents ?? 0}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          _buildStatCard('À venir', '${stats?.upcomingEvents ?? 0}'),
+                          const SizedBox(width: 8),
+                          _buildStatCard('En cours', '${stats?.ongoingEvents ?? 0}'),
+                          const SizedBox(width: 8),
+                          _buildStatCard('Terminés', '${stats?.finishedEvents ?? 0}'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Events Sections
+                _buildEventsSection('Evènements en cours'),
+                const SizedBox(height: 20),
+                _buildEventsSection('Evènements à venir'),
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
+  }
+
+  String _getMonthName(int month) {
+    const months = [
+      'Janvier',
+      'Février',
+      'Mars',
+      'Avril',
+      'Mai',
+      'Juin',
+      'Juillet',
+      'Août',
+      'Septembre',
+      'Octobre',
+      'Novembre',
+      'Décembre'
+    ];
+    return months[month - 1];
   }
 
   Widget _buildStatCard(String title, String value) {
@@ -233,17 +277,19 @@ class DashboardScreen extends StatelessWidget {
           height: 120,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: events.length,
+            itemCount: widget.eventData.length,
             itemBuilder: (context, index) {
               return Container(
                 width: 200,
                 margin: const EdgeInsets.only(right: 12),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  image: DecorationImage(
-                    image: AssetImage(events[index].imageUrl),
-                    fit: BoxFit.cover,
-                  ),
+                    image: DecorationImage(
+                      image: widget.eventData[index].image != null && widget.eventData[index].image!.isNotEmpty
+                          ? NetworkImage(widget.eventData[index].image!)
+                          : const AssetImage('images/mark5.jpg') as ImageProvider,
+                      fit: BoxFit.cover,
+                    ),
                 ),
                 child: Stack(
                   children: [
@@ -279,7 +325,7 @@ class DashboardScreen extends StatelessWidget {
                       bottom: 8,
                       left: 8,
                       child: Text(
-                        events[index].name,
+                        widget.eventData[index].title!,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.9),
                           fontSize: 24,
@@ -296,14 +342,4 @@ class DashboardScreen extends StatelessWidget {
       ],
     );
   }
-}
-
-class EventData {
-  final String name;
-  final String imageUrl;
-
-  EventData({
-    required this.name,
-    required this.imageUrl,
-  });
 }

@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:eventiss/api/dio_instance.dart';
+import 'package:eventiss/api/models/dashboard.dart';
 import 'package:eventiss/api/models/event.dart';
 
 class EventService {
@@ -28,5 +31,11 @@ class EventService {
   Future<Event> delete(String id) async {
     final response = await api.delete('/events/$id');
     return Event.fromJson(response.data);
+  }
+
+  Future<Dashboard> fetchStats() async {
+    final response = await api.get('/dashboard/stats');
+    print(response);
+    return Dashboard.fromJson(response.data);
   }
 }
