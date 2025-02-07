@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:eventiss/api/util/session_handler.dart';
+import 'package:eventiss/pages/admin/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:eventiss/pages/profil.dart';
@@ -48,7 +49,7 @@ class _bottomnavState extends State<bottomnav> {
   final screens = [
     Home(eventData: events),
     isAdmin ? AddTicketPage() : const reservation(),
-    const profil(),
+    DashboardScreen(),
   ];
 
     final items = [
@@ -59,7 +60,6 @@ class _bottomnavState extends State<bottomnav> {
 
     return Scaffold(
       extendBody: true,
-      backgroundColor: Colors.blue,
       body: screens[index],
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
