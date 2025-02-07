@@ -1,4 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:eventiss/api/util/session_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:eventiss/pages/profil.dart';
@@ -25,20 +26,28 @@ class _bottomnavState extends State<bottomnav> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<EventProvider>(context, listen: false).fetchEvents();
+      checkAdminStatus();
+    });
+  }
+
+  void checkAdminStatus() async {
+    bool adminStatus = await SessionHandler.isAdmin();
+    setState(() {
+      isAdmin = adminStatus;
     });
   }
 
   int index = 0;
+  bool isAdmin = false;
   @override
   Widget build(BuildContext context) {
   final eventProvider = Provider.of<EventProvider>(context);
-
 
   final List<Event> events = eventProvider.events;
 
   final screens = [
     Home(eventData: events),
-    const reservation(),
+    isAdmin ? AddTicketPage() : const reservation(),
     const profil(),
   ];
 

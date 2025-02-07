@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:eventiss/api/models/event.dart';
 import 'package:eventiss/api/services/event_service.dart';
@@ -8,6 +9,7 @@ class EventProvider with ChangeNotifier {
   bool _isLoading = false;
 
   List<Event> get events => _events;
+
   bool get isLoading => _isLoading;
 
   Future<void> fetchEvents() async {
@@ -15,8 +17,14 @@ class EventProvider with ChangeNotifier {
     notifyListeners();
     try {
       _events = await _eventService.getAll();
-    } catch (e) {
-      print("Erreur lors de la récupération des événements : $e");
+    } on DioException catch (e) {
+      if (e.response != null) {
+        print(e.response?.statusCode);
+        print(e.response?.data);
+      } else {
+        print("Not dio error ${e.requestOptions}");
+        print("Not dio error ${e.message}");
+      }
     } finally {
       _isLoading = false;
       notifyListeners();

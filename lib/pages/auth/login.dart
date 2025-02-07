@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:eventiss/api/models/authenticated_user.dart';
 import 'package:eventiss/api/services/user_service.dart';
+import 'package:eventiss/api/util/session_handler.dart';
 import 'package:eventiss/pages/auth/recuperation.dart';
 import 'package:eventiss/pages/auth/register.dart';
 import 'package:eventiss/pages/bottomnav.dart';
@@ -55,9 +56,12 @@ class _loginState extends State<login> {
       };
 
       AuthenticatedUser user = await userService.login(data);
+
+
       final sharedPref = await SharedPreferences.getInstance();
 
       sharedPref.setString("token", user.token!);
+      await SessionHandler.saveUserSession(user);
 
       Fluttertoast.showToast(
           msg: "Utilisateur connecté avec succès",

@@ -7,7 +7,8 @@ class UserService {
 
   Future<AuthenticatedUser> login(Map<String, dynamic> data) async {
     final response =  await api.post('/auth/login', data: data);
-    return AuthenticatedUser.fromJson(response.data);
+    print("Réponse API login: ${response.data['data']}");
+    return AuthenticatedUser.fromJson(response.data['data']);
   }
 
   Future<User> register(Map<String, dynamic> data) async {
@@ -17,7 +18,8 @@ class UserService {
 
   Future<AuthenticatedUser> user() async {
     final response = await api.get('/auth/me');
-    final authenticatedUser = AuthenticatedUser.fromJson(response.data);
+    print(response.data);
+    final authenticatedUser = AuthenticatedUser.fromJson(response.data['data']);
     return authenticatedUser;
   }
 }

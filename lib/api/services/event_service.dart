@@ -15,7 +15,7 @@ class EventService {
     return Event.fromResponse(response.data).first;
   }
 
-  Future<Event> create(Map<String, String> data) async {
+  Future<Event> create(FormData data) async {
     final response = await api.post('/events/create', data: data);
     return Event.fromJson(response.data);
   }

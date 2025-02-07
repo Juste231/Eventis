@@ -10,10 +10,10 @@ class AuthenticatedUser {
   });
 
   factory AuthenticatedUser.fromJson(Map<String, dynamic> json) {
-    final data = json["data"];
+
     return AuthenticatedUser(
-      token: data["token"],
-      user: data["user"] == null ? null : User.fromJson(data["user"]),
+      token: json["token"],
+      user: json["user"] == null ? null : User.fromJson(json["user"]),
   );
 }
 
