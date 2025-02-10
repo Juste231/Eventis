@@ -4,9 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Dio configureDio() {
   final options = BaseOptions(
-    baseUrl: 'http://192.168.0.197:4000/api',
-    connectTimeout: Duration(seconds: 30),
-    receiveTimeout: Duration(seconds: 30),
+    baseUrl: 'http://192.168.1.107:4000/api',
+    connectTimeout: Duration(seconds: 60),
+    receiveTimeout: Duration(seconds: 60),
     headers: {
       'Accept': 'application/json',
       'Content-type': 'application/json'

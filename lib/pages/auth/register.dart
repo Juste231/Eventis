@@ -75,7 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       } else {
         print("Il y a une erreur");
         // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
+        print(e.requestOptions.data);
         print(e.message);
       }
       Fluttertoast.showToast(msg: "Une erreur est survenue");

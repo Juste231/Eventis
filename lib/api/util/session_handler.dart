@@ -48,7 +48,10 @@ class SessionHandler {
         content: Text('Votre session a expiré. Veuillez vous reconnecter.'),
         actions: [
           TextButton(
-            onPressed: () {
+            onPressed: () async {
+              final sharedPref = await SharedPreferences.getInstance();
+              await sharedPref.remove("token");
+              await sharedPref.remove("user");
               Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) => login(),

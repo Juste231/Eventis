@@ -11,7 +11,7 @@ Future<void> checkLoginStatus(BuildContext context) async {
   final sharedPref = await SharedPreferences.getInstance();
   String? token = sharedPref.getString("token");
 
-  if (token != null && !JwtDecoder.isExpired(token)) {
+  if ((token != null || token != "") && !JwtDecoder.isExpired(token!)) {
     print(token);
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => bottomnav()));

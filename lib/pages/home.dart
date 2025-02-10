@@ -5,8 +5,10 @@ import 'package:eventiss/widgets/catpopWidget.dart';
 import 'package:flutter/material.dart';
 import '../widgets/homeAppBar.dart';
 import '../widgets/categoriesWidget.dart';
+
 class Home extends StatefulWidget {
   final List<Event> eventData;
+
   const Home({super.key, required this.eventData});
 
   @override
@@ -29,19 +31,25 @@ class _HomeState extends State<Home> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => event(eventData: widget.eventData)),
+                  MaterialPageRoute(
+                      builder: (context) => event(eventData: widget.eventData)),
                 );
               },
-              child: Text("Evènements à venir >",
+              child: Text(
+                "Evènements à venir >",
                 style: TextStyle(
-                    color: Color(0xFF112A46),
-                    fontSize: 20,
+                  color: Color(0xFF112A46),
+                  fontSize: 20,
                 ),
               ),
             ),
           ),
           SizedBox(height: 20),
-          cardforevent(),
+          widget.eventData.isEmpty
+              ? Center(
+                  child: Text("Aucun evenement existant"),
+                )
+              : cardforevent(),
           SizedBox(height: 30),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),
@@ -52,18 +60,21 @@ class _HomeState extends State<Home> {
                   MaterialPageRoute(builder: (context) => eventpop()),
                 );
               },
-              child: Text("Evènements populaire >",
+              child: Text(
+                "Evènements populaire >",
                 style: TextStyle(
-                    color: Color(0xFF112A46),
-                    fontSize: 20,
+                  color: Color(0xFF112A46),
+                  fontSize: 20,
                 ),
               ),
             ),
           ),
           SizedBox(height: 20),
-          catpopwidget(),
-
-
+          widget.eventData.isEmpty
+              ? Center(
+                  child: Text("Aucun evenement existant"),
+                )
+              : catpopwidget(),
         ],
       ),
     );

@@ -7,12 +7,21 @@ import 'package:eventiss/pages/securite.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 import 'pages/splashScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('fr_FR', null);
 
+  if (WebViewPlatform.instance is WebKitWebViewPlatform) {
+    final WebKitWebViewPlatform platform = WebViewPlatform.instance as WebKitWebViewPlatform;
+    WebKitWebViewPlatform.registerWith();
+  } else {
+    AndroidWebViewPlatform.registerWith();
+  }
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => EventProvider()),

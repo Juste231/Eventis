@@ -2,11 +2,16 @@ import 'package:dio/dio.dart';
 import 'package:eventiss/api/models/event.dart';
 import 'package:eventiss/api/services/reservation_service.dart';
 import 'package:eventiss/pages/payementpage.dart';
+import 'package:eventiss/pages/paymentwebview.dart';
+import 'package:eventiss/pages/tickets.dart';
 import 'package:eventiss/widgets/image_loader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+
+import '../api/models/reservation.dart';
+import '../api/services/payment_service.dart';
 
 class detailevent extends StatefulWidget {
   final Event eventData;
@@ -44,23 +49,30 @@ class _detaileventState extends State<detailevent> {
         "numberOfTickets": quantity
       };
       final result = await reservationService.create(data);
-      Navigator.push(
+      List<Reservation> createdReservations = List<Reservation>.from(result['reservations']);
+      List<String> reservationIds = createdReservations.map((reservation) => reservation.id!).toList();
+
+      final paymentInit = await PaymentService().initializePayment(reservationIds);
+
+
+      print("Payment initialize, $paymentInit");
+      bool? paymentSuccess = await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => paymentpage(
-            title: widget.eventData.title!,
-            ticketType: selectedTicketType,
-            quantity: quantity,
-            date: DateFormat.yMMMEd('fr_FR')
-                .format(widget.eventData.date!),
-            location: widget.eventData.location!,
-            // Vous pouvez ajouter cette info dans eventData
-            image: widget.eventData.image!,
-            amount: widget.eventData.price!
-                .toDouble(), // Remplacez par le vrai prix selon le type de ticket
-          ),
+          builder: (context) => PaymentWebViewPage(paymentUrl: paymentInit.paymentUrl,),
         ),
       );
+
+      if (paymentSuccess == true) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TicketsPage(reservationId: reservationIds.first,),
+          ),
+        );
+      } else {
+        Fluttertoast.showToast(msg: "Le paiement a échoué");
+      }
       print("All reservations are created $result");
     } on DioException catch (e) {
       if (e.response != null) {

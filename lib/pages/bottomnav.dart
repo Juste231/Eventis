@@ -49,7 +49,7 @@ class _bottomnavState extends State<bottomnav> {
   final screens = [
     Home(eventData: events),
     isAdmin ? AddTicketPage() : const reservation(),
-    DashboardScreen(eventData: events),
+    isAdmin ? DashboardScreen(eventData: events) : profil(),
   ];
 
     final items = [

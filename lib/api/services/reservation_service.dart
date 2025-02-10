@@ -9,29 +9,28 @@ class ReservationService {
 
   Future<List<Reservation>> getAll() async {
     final response = await api.get('/reservations');
-    return (response.data['reservations'] as List).map((e) => Reservation.fromJson(e)).toList();
+    print("Reponse de l'api ${response.data}");
+    return (response.data['reservations'] as List)
+        .map((e) => Reservation.fromJson(e))
+        .toList();
   }
 
   Future<Map<String, dynamic>> create(Map<String, dynamic> data) async {
-    try{
-      final response = await api.post('/reservations/create', data: data);
-      final responseData = response.data['data'];
+    final response = await api.post('/reservations/create', data: data);
+    final responseData = response.data['data'];
 
-      final reservations = (responseData['reservations'] as List)
-          .map((e) => Reservation.fromJson(e))
-          .toList();
+    final reservations = (responseData['reservations'] as List)
+        .map((e) => Reservation.fromJson(e))
+        .toList();
 
-      final tickets = (responseData['tickets'] as List)
-          .map((e) => Ticket.fromJson(e))
-          .toList();
+    final tickets = (responseData['tickets'] as List)
+        .map((e) => Ticket.fromJson(e))
+        .toList();
 
-      return {
-        'reservations': reservations,
-        'tickets': tickets,
-      };
-    } catch (e) {
-      throw Exception("$e");
-    }
+    return {
+      'reservations': reservations,
+      'tickets': tickets,
+    };
   }
 
   Future<Reservation> getById(String id) async {
