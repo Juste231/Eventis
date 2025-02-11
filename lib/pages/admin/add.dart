@@ -40,8 +40,7 @@ class _AddTicketPageState extends State<AddTicketPage> {
 
   Map<String, TextEditingController> ticketPrices = {
     'Standard': TextEditingController(),
-    'VIP': TextEditingController(),
-    'Premium': TextEditingController(),
+
   };
 
 
